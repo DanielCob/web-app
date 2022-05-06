@@ -1,25 +1,36 @@
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
+import { fetchHelloWorld } from './services/HelloWorldService';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export class App extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      currentTime: Date.now()
+    }
+    setInterval(() => {
+      this.setState({
+        currentTime: Date.now()
+      });
+    }, 1000)
+  }
+
+  async clickHandler() {
+    const result = await fetchHelloWorld();
+    this.setState({
+      label: result
+    });
+  }
+
+  render() {
+    return (
+      <div className="App">
+        {new Date(this.state.currentTime).toLocaleString()}
+        <button onClick={() => this.clickHandler()}>Call API</button>
+        {this.state.label}
+      </div>
+    );
+  }
 }
 
 export default App;
